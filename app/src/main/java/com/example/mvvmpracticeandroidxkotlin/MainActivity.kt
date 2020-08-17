@@ -10,12 +10,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
 
-    private lateinit var viewModel : MainActivityViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java);
+        viewModel.init()
         setOnClickListener()
         setObserver()
 
@@ -24,10 +25,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun setObserver() {
         viewModel.seconds().observe(this, Observer {
-            txvNum.text=it.toString()
+            txvNum.text = it.toString().format(4)
         })
         viewModel.finished.observe(this, Observer {
-            if (it){
+            if (it) {
                 Toast.makeText(this, "Finished!", Toast.LENGTH_SHORT).show()
             }
         })
@@ -35,16 +36,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickListener() {
 
-        btnStart.setOnClickListener(){
-            if(edtNum.text.isEmpty()||edtNum.text.length<4){
-                Toast.makeText(this,"Invalid Num",Toast.LENGTH_SHORT)
-            }else{
-                viewModel.timerValue.value = edtNum.text.toString().toLong()
+        btnStart.setOnClickListener() {
+            if (edtNum.text.isEmpty()) {
+                Toast.makeText(this, "Invalid Num", Toast.LENGTH_SHORT)
+            } else {
+                viewModel.timerValue.value = edtNum.text.toString().toLong()*1000
                 viewModel.startTimer()
             }
         }
-        btnStop.setOnClickListener(){
-            txvNum.text="0"
+        btnStop.setOnClickListener() {
+            txvNum.text = "0"
             viewModel.stopTimer()
         }
     }
